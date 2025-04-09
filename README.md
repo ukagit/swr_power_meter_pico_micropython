@@ -97,6 +97,84 @@ AutoRange misst zunächst auf dem kleinsten Gain (±6.144 V) und passt automat
 - Fehleranzeige bei SWR > Limit
 - Anzeige von Gain (optional aktivierbar)
 
+
+
+🔁 Messkette einmal **komplett durchrechnen**:
+
+Die ganze Messkette einmal **komplett durchrechnen**, von der **HF-Leistung (100 W)** über den **Richtkoppler (2,8 V DC-Ausgang)** bis zum **ADC-Wert im ADS1115** – inklusive Umrechnung und Auflösung. 
+
+------
+
+## 🔁 Gesamtstrecke:
+
+> **HF-Leistung → Richtkoppler → DC-Spannung (2,8 V) → ADS1115 → Digitalwert**
+
+------
+
+## 🧱 Gegeben:
+
+- **Maximale HF-Leistung:** 100 W
+- **DC-Spannung bei 100 W:** 2,80 V
+- **ADC: ADS1115, 16 Bit, Gain = 1** → Messbereich ±4.096 V
+- **LSB (Spannungsauflösung):** 0.125 mV = 0.000125 V
+
+------
+
+## 🧮 Schritt 1: HF-Leistung → DC-Spannung
+
+Der Richtkoppler erzeugt eine Spannung, die proportional zur **Wurzel der Leistung** ist:
+
+VDC=a⋅PHFV_{\text{DC}} = a \cdot \sqrt{P_{\text{HF}}}
+
+Bei 100 W → 2,8 V
+ → Umstellen:
+
+a=VP=2.8100=2.810=0.28a = \frac{V}{\sqrt{P}} = \frac{2.8}{\sqrt{100}} = \frac{2.8}{10} = 0.28
+
+Die allgemeine Formel:
+
+V=0.28⋅P⇔P=(V0.28)2V = 0.28 \cdot \sqrt{P} \quad \Leftrightarrow \quad P = \left(\frac{V}{0.28}\right)^2
+
+------
+
+## 🧮 Schritt 2: DC-Spannung → ADC-Wert
+
+ADS1115, Gain = 1 → ±4.096 V → 16-Bit Bereich = ±32768
+ (also 1 LSB = 0.125 mV)
+
+Jetzt berechnen wir den ADC-Wert bei 2.8 V:
+
+ADC-Wert=2.8 V0.000125 V=22.400\text{ADC-Wert} = \frac{2.8\,\text{V}}{0.000125\,\text{V}} = 22.400
+
+→ Das ist dein digitaler Wert bei 100 W Leistung.
+
+------
+
+## 🧮 Schritt 3: ADC-Wert → zurück zu HF-Leistung
+
+Du misst z. B. mit ADS1115: **ADC = 16.000**
+
+→ Umrechnen in Spannung:
+
+V=16000⋅0.000125=2.000 VV = 16000 \cdot 0.000125 = 2.000\,\text{V}
+
+→ In HF-Leistung zurückrechnen:
+
+P=(2.00.28)2=(7.14)2≈51.0 WP = \left(\frac{2.0}{0.28}\right)^2 = \left(7.14\right)^2 ≈ 51.0\,\text{W}
+
+------
+
+## ✅ Fazit – Messkette (100 W Beispiel):
+
+| Stufe                   | Wert                      |
+| ----------------------- | ------------------------- |
+| HF-Leistung             | 100 W                     |
+| DC-Ausgang Richtkoppler | 2.80 V                    |
+| ADS1115 (Gain=1)        | 22.400 Schritte           |
+| Auflösung bei 2.8 V     | ca. **6.25 mW / Schritt** |
+
+
+
 ---
 
 ## 📜 Lizenz
